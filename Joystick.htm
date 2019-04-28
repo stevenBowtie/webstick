@@ -35,10 +35,13 @@
           }
         }
       }
-      
+      function pageInit(){
+        setTimeout(listGamepads,500);
+        setInterval(drawScreen, 50);
+      } 
     </script>
   </head>
-  <body onLoad="setInterval(drawScreen, 50)">
+  <body onLoad="pageInit()">
       <div style="position: relative;height:300px;width:30px;background-color: #000000;vertical-align: bottom;">
           <div id="z_axis" style="
             bottom: 0;
