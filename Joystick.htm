@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <script type="text/javascript">
+      var invert_x=1;
+      var invert_y=-1;
+      var invert_z=-1;
+      function updateStick(){
+        var gamepads = navigator.getGamepads(); 
+        var x = gamepads[1]["axes"][0];
+        var y = gamepads[1]["axes"][1];
+        var z = gamepads[1]["axes"][2];
+        var trigger = gamepads[1]["buttons"][0]["pressed"];
+        return [x,y,z,trigger];
+      }
+      
+      function drawScreen(){
+        try{ 
+          var cursor_color="#00ff00";
+          var [x,y,z,trigger] = updateStick();
+          document.getElementById("xy_axis").style.left=invert_x*x*250+250;
+          document.getElementById("xy_axis").style.bottom=invert_y*y*250+250;
+          document.getElementById("z_axis").style.height=invert_z*z*150+150;
+          if(trigger){ cursor_color="#FF0000"; }
+          document.getElementById("xy_axis").style.backgroundColor=cursor_color;
+        }
+        catch{ }
+      }
+
+      function listGamepads(){
+        var gamepads=navigator.getGamepads();
+        for(i=0;i<gamepads.length;i++){ 
+          if(gamepads[i]!=null){
+            console.log( gamepads[i]);
+            document.forms[0].elements["Joystick"].add(new Option(gamepads[i]["id"],i));
+          }
+        }
+      }
+      
+    </script>
+  </head>
+  <body onLoad="setInterval(drawScreen, 50)">
+      <div style="position: relative;height:300px;width:30px;background-color: #000000;vertical-align: bottom;">
+          <div id="z_axis" style="
+            bottom: 0;
+            position: absolute;
+            height: 20;
+            width: 20px;
+            background-color: #00ff00;
+            margin-left: 5px;
+            margin-right: 5px;
+            vertical-align: bottom; ">
+          </div>
+      </div>
+      <div style="position:fixed; left:50; top:0; height:500px;width:500px;background-color: #000000; ">
+        <div id="xy_axis" style="position:absolute; bottom:250; left:250; height:20; width:20; background-color:#00ff00">
+        </div>
+      </div>
+    <div>
+      <form>
+        <select id="joystick" name="Joystick">
+        </select>
+      </form>
+    </div>
+  </body>
+</html>
