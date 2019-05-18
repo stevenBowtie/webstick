@@ -24,20 +24,15 @@
       }
       
       function drawScreen(){
-        try{ 
           var cursor_color="#00ff00";
           var [x,y,z,trigger] = updateStick();
-          if(ws.readystate!=1){ 
-            ws = new WebSocket(host); 
-          }
+//          if(ws.readystate!=1){ ws = new WebSocket(host); }
           if(ws.readyState==1){ ws.send(x+","+y+","+z+","+trigger); }
           document.getElementById("xy_axis").style.left=invert_x*x*250+250;
           document.getElementById("xy_axis").style.bottom=invert_y*y*250+250;
           document.getElementById("z_axis").style.height=invert_z*z*150+150;
           if(trigger){ cursor_color="#FF0000"; }
           document.getElementById("xy_axis").style.backgroundColor=cursor_color;
-        }
-        catch{ }
       }
 
       function listGamepads(){
