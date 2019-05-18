@@ -6,10 +6,45 @@
           invert_x =  1,
           invert_y = -1,
           invert_z = -1,
-          killCode = 0;
+          killCode = 0,
+          key_x = 0,
+          key_y = 0;
 
       ws.onclose = function(event){ console.log(event); }
       
+      function keyDownListen(key){
+        switch( key.key ){
+        case "ArrowUp":
+          key_y = 1;
+          break;
+        case "ArrowDown":
+          key_y = -1;
+          break;
+        case "ArrowRight":
+          key_x = 1;
+          break;
+        case "ArrowLeft":
+          key_x = -1;
+          break;
+        }
+      }
+
+      function keyUpListen(key){
+        switch( key.key ){
+        case "ArrowUp":
+          key_y = 0;
+          break;
+        case "ArrowDown":
+          key_y = 0;
+          break;
+        case "ArrowRight":
+          key_x = 0;
+          break;
+        case "ArrowLeft":
+          key_x = 0;
+          break;
+        }
+      }
       function updateStick(){
         var x=0, y=0, z=0, trigger = 0;
         try{
@@ -20,6 +55,8 @@
           trigger = gamepads[1]["buttons"][0]["pressed"];
         }
         catch{ }
+        if(  key_x != 0 ){ x = key_x; }
+        if(  key_y != 0 ){ y = key_y; }
         return [x,y,z,trigger];
       }
       
@@ -46,10 +83,11 @@
       }
       function pageInit(){
         setTimeout(listGamepads,500);
-        killCode = setInterval(drawScreen, 500);
+        killCode = setInterval(drawScreen, 50);
       } 
 
-      
+      document.onkeydown = keyDownListen; 
+      document.onkeyup = keyUpListen; 
     </script>
   </head>
   <body onLoad="pageInit()">
