@@ -9,10 +9,12 @@
           killCode = 0,
           key_x = 0,
           key_y = 0;
+          key_trigger = 0;
 
       ws.onclose = function(event){ console.log(event); }
       
       function keyDownListen(key){
+        console.log(key.key);
         switch( key.key ){
         case "ArrowUp":
           key_y = 1;
@@ -25,6 +27,9 @@
           break;
         case "ArrowLeft":
           key_x = -1;
+          break;
+        case " ":
+          key_trigger = 1;
           break;
         }
       }
@@ -43,20 +48,24 @@
         case "ArrowLeft":
           key_x = 0;
           break;
+        case " ":
+          key_trigger = 0;
+          break;
         }
       }
       function updateStick(){
         var x=0, y=0, z=0, trigger = 0;
         try{
           var gamepads = navigator.getGamepads(); 
-          x = gamepads[1]["axes"][0];
-          y = gamepads[1]["axes"][1];
-          z = gamepads[1]["axes"][2];
+          x = gamepads[1]["axes"][0]*invert_x;
+          y = gamepads[1]["axes"][1]*invert_y;
+          z = gamepads[1]["axes"][2]*invert_z;
           trigger = gamepads[1]["buttons"][0]["pressed"];
         }
         catch{ }
         if(  key_x != 0 ){ x = key_x; }
         if(  key_y != 0 ){ y = key_y; }
+        if(  key_trigger != 0 ){ trigger = key_trigger; }
         return [x,y,z,trigger];
       }
       
@@ -65,9 +74,9 @@
           var [x,y,z,trigger] = updateStick();
 //          if(ws.readystate!=1){ ws = new WebSocket(host); }
           if(ws.readyState==1){ ws.send(x+","+y+","+z+","+trigger); }
-          document.getElementById("xy_axis").style.left=invert_x*x*250+250;
-          document.getElementById("xy_axis").style.bottom=invert_y*y*250+250;
-          document.getElementById("z_axis").style.height=invert_z*z*150+150;
+          document.getElementById("xy_axis").style.left=x*250+250;
+          document.getElementById("xy_axis").style.bottom=y*250+250;
+          document.getElementById("z_axis").style.height=z*150+150;
           if(trigger){ cursor_color="#FF0000"; }
           document.getElementById("xy_axis").style.backgroundColor=cursor_color;
       }
