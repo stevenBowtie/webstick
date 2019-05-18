@@ -1,15 +1,25 @@
 <html>
   <head>
     <script type="text/javascript">
-      var invert_x=1;
-      var invert_y=-1;
-      var invert_z=-1;
+      var host = "ws://127.0.0.1:8765/",
+          ws = new WebSocket(host),
+          invert_x =  1,
+          invert_y = -1,
+          invert_z = -1,
+          killCode = 0;
+
+      ws.onclose = function(event){ console.log(event); }
+      
       function updateStick(){
-        var gamepads = navigator.getGamepads(); 
-        var x = gamepads[1]["axes"][0];
-        var y = gamepads[1]["axes"][1];
-        var z = gamepads[1]["axes"][2];
-        var trigger = gamepads[1]["buttons"][0]["pressed"];
+        var x=0, y=0, z=0, trigger = 0;
+        try{
+          var gamepads = navigator.getGamepads(); 
+          x = gamepads[1]["axes"][0];
+          y = gamepads[1]["axes"][1];
+          z = gamepads[1]["axes"][2];
+          trigger = gamepads[1]["buttons"][0]["pressed"];
+        }
+        catch{ }
         return [x,y,z,trigger];
       }
       
@@ -17,6 +27,10 @@
         try{ 
           var cursor_color="#00ff00";
           var [x,y,z,trigger] = updateStick();
+          if(ws.readystate!=1){ 
+            ws = new WebSocket(host); 
+          }
+          if(ws.readyState==1){ ws.send(x+","+y+","+z+","+trigger); }
           document.getElementById("xy_axis").style.left=invert_x*x*250+250;
           document.getElementById("xy_axis").style.bottom=invert_y*y*250+250;
           document.getElementById("z_axis").style.height=invert_z*z*150+150;
@@ -37,8 +51,10 @@
       }
       function pageInit(){
         setTimeout(listGamepads,500);
-        setInterval(drawScreen, 50);
+        killCode = setInterval(drawScreen, 500);
       } 
+
+      
     </script>
   </head>
   <body onLoad="pageInit()">

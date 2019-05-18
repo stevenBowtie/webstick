@@ -2,9 +2,11 @@ import asyncio
 import websockets
 
 async def incoming_handler(websocket, path):
-    name = await websocket.recv()
-    print(name)
-    await websocket.send("ok")
+    while websocket.open:
+      name = await websocket.recv()
+      print(name)
+      websocket.pong()
+    websocket.close()
 
 start_server = websockets.serve(incoming_handler, 'localhost', 8765)
 
