@@ -101,6 +101,7 @@
         var gamepads=navigator.getGamepads();
         for(i=0;i<gamepads.length;i++){
           if(gamepads[i]!=null){
+            document.forms[0].elements["Joystick"].innerHTML='';
             console.log( gamepads[i]);
             document.forms[0].elements["Joystick"].add(new Option(gamepads[i]["id"],i));
           }
@@ -142,6 +143,7 @@
         <input type="button" value="Init" onclick="updateHost()" />
         <select id="joystick" name="Joystick" oninput="selectJoystick()">
         </select>
+        <img height="20px" width="20px"src="reload.png" onclick="listGamepads()"/>
       </form>
     </div>
   </body>
