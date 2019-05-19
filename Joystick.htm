@@ -1,3 +1,4 @@
+<!DOCTYPE html5>
 <html>
   <head>
     <script type="text/javascript">
@@ -76,7 +77,7 @@
           z = gamepads[selectedJoystick]["axes"][2]*invert_z;
           trigger = gamepads[selectedJoystick]["buttons"][0]["pressed"];
         }
-        catch{ }
+        catch(err){  }
         if(  key_x != 0 ){ x = key_x; }
         if(  key_y != 0 ){ y = key_y; }
         if(  key_trigger != 0 ){ trigger = key_trigger; }
@@ -88,7 +89,7 @@
           var [x,y,z,trigger] = updateStick();
 //          if(ws.readystate!=1){ ws = new WebSocket(host); }
           try{ if(ws.readyState==1){ ws.send(x+","+y+","+z+","+trigger); } }
-          catch { }
+          catch(err) { }
           document.getElementById("xy_axis").style.left=x*250+250;
           document.getElementById("xy_axis").style.bottom=y*250+250;
           document.getElementById("z_axis").style.height=z*150+150;
@@ -105,6 +106,7 @@
           }
         }
       }
+
       function pageInit(){
         setTimeout(listGamepads,500);
         killCode = setInterval(drawScreen, 50);
