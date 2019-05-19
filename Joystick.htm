@@ -2,6 +2,8 @@
   <head>
     <script type="text/javascript">
       var host = "ws://127.0.0.1:8765/",
+          ws_host="",
+          img_host="http://192.168.1.110:8081/",
           ws,
           invert_x =  1,
           invert_y = -1,
@@ -15,8 +17,11 @@
       function updateHost(){
         console.log("ws");
         host=document.getElementById("host").value;
+        img_host = "http://"+ host +":8081/";
+        ws_host = "ws://"+ host +":8765/";
         document.getElementById("host").value = host;
-        ws = new WebSocket(host);
+        document.getElementById("vid_window").src= img_host;
+        ws = new WebSocket(ws_host);
       }
       function selectJoystick(){
         selectedJoystick = document.forms[0].elements["Joystick"].selectedIndex;
@@ -124,7 +129,7 @@
           </div>
       </div>
       <div style="position:relative; left:50; top:0; height:500px;width:500px;background-color: #000000; ">
-        <img style="-webkit-user-select: none;" src="http://192.168.1.110:8081/" width="500px" height="500px">
+        <img id="vid_window" style="-webkit-user-select: none;" src="http://192.168.1.110:8081/" width="500px" height="500px">
         <div id="xy_axis" style="position:absolute; bottom:250; left:250; height:20; width:20; background-color:#00ff00">
         </div>
       </div>
