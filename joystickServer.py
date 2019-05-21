@@ -2,7 +2,7 @@ import asyncio
 import websockets
 import serial
 
-limit=2048
+limit=800
 
 try:
   s = serial.Serial('/dev/ttyACM0',115200)
@@ -15,7 +15,7 @@ def go(d,t):
   goStr="M1: {} \r\nM2: {} \r\n".format(d,t)
   print(goStr)
   if(s!=0):
-    s.write(gotStr.encode("UTF-8"))
+    s.write(goStr.encode("UTF-8"))
 
 def scale(x, y):
   l=int((y*limit)+(x*(limit/1.5)))
