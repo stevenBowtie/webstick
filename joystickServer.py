@@ -18,8 +18,8 @@ def go(d,t):
     s.write(goStr.encode("UTF-8"))
 
 def scale(x, y):
-  l=int((y*limit)+(x*(limit/1.5)))
-  r=int((y*limit)+(-x*(limit/1.5)))
+  l=int((y*limit)+(-x*(limit/2)))
+  r=int((y*limit)+(x*(limit/2)))
   go(l,r)
 
 def parse(dataRecvd):

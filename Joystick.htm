@@ -15,6 +15,12 @@
           key_trigger = 0,
           selectedJoystick=0;
 
+      function getIP(){
+        re = /(\d+\.){3}\d+/;
+        ip = re.exec(document.URL)[0];
+        document.getElementById("host").value = ip;
+      }
+
       function updateHost(){
         console.log("ws");
         host=document.getElementById("host").value;
@@ -109,6 +115,8 @@
       }
 
       function pageInit(){
+        console.log("does this even run?");
+        getIP();
         setTimeout(listGamepads,500);
         killCode = setInterval(drawScreen, 50);
       }
@@ -117,7 +125,7 @@
       document.onkeyup = keyUpListen;
     </script>
   </head>
-  <body onLoad="pageInit()">
+  <body onload="pageInit()">
     <div style="position:relative;">
       <div style="position: absolute;height:300px;width:30px;background-color: #000000;vertical-align: bottom;">
           <div id="z_axis" style="
