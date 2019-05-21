@@ -1,7 +1,10 @@
+<!DOCTYPE html5>
 <html>
   <head>
     <script type="text/javascript">
       var host = "ws://127.0.0.1:8765/",
+          ws_host="",
+          img_host="http://192.168.1.110:8081/",
           ws,
           invert_x =  1,
           invert_y = -1,
@@ -9,14 +12,22 @@
           killCode = 0,
           key_x = 0,
           key_y = 0;
-          key_trigger = 0;
+          key_trigger = 0,
+          selectedJoystick=0;
 
       function updateHost(){
         console.log("ws");
         host=document.getElementById("host").value;
-        ws = new WebSocket(host);
+        img_host = "http://"+ host +":8081/";
+        ws_host = "ws://"+ host +":8765/";
+        document.getElementById("host").value = host;
+        document.getElementById("vid_window").src= img_host;
+        ws = new WebSocket(ws_host);
       }
-
+      function selectJoystick(){
+        selectedJoystick = document.forms[0].elements["Joystick"].selectedIndex;
+        console.log(selectedJoystick);
+      }
       function keyDownListen(key){
         //console.log(key.key);
         switch( key.key ){
@@ -61,12 +72,12 @@
         var x=0, y=0, z=0, trigger = 0;
         try{
           var gamepads = navigator.getGamepads();
-          x = gamepads[1]["axes"][0]*invert_x;
-          y = gamepads[1]["axes"][1]*invert_y;
-          z = gamepads[1]["axes"][2]*invert_z;
-          trigger = gamepads[1]["buttons"][0]["pressed"];
+          x = gamepads[selectedJoystick]["axes"][0]*invert_x;
+          y = gamepads[selectedJoystick]["axes"][1]*invert_y;
+          z = gamepads[selectedJoystick]["axes"][2]*invert_z;
+          trigger = gamepads[selectedJoystick]["buttons"][0]["pressed"];
         }
-        catch{ }
+        catch(err){  }
         if(  key_x != 0 ){ x = key_x; }
         if(  key_y != 0 ){ y = key_y; }
         if(  key_trigger != 0 ){ trigger = key_trigger; }
@@ -78,7 +89,7 @@
           var [x,y,z,trigger] = updateStick();
 //          if(ws.readystate!=1){ ws = new WebSocket(host); }
           try{ if(ws.readyState==1){ ws.send(x+","+y+","+z+","+trigger); } }
-          catch { }
+          catch(err) { }
           document.getElementById("xy_axis").style.left=x*250+250;
           document.getElementById("xy_axis").style.bottom=y*250+250;
           document.getElementById("z_axis").style.height=z*150+150;
@@ -90,11 +101,13 @@
         var gamepads=navigator.getGamepads();
         for(i=0;i<gamepads.length;i++){
           if(gamepads[i]!=null){
+            document.forms[0].elements["Joystick"].innerHTML='';
             console.log( gamepads[i]);
             document.forms[0].elements["Joystick"].add(new Option(gamepads[i]["id"],i));
           }
         }
       }
+
       function pageInit(){
         setTimeout(listGamepads,500);
         killCode = setInterval(drawScreen, 50);
@@ -119,16 +132,18 @@
           </div>
       </div>
       <div style="position:relative; left:50; top:0; height:500px;width:500px;background-color: #000000; ">
+        <img id="vid_window" style="-webkit-user-select: none;" src="http://192.168.1.110:8081/" width="500px" height="500px">
         <div id="xy_axis" style="position:absolute; bottom:250; left:250; height:20; width:20; background-color:#00ff00">
         </div>
       </div>
     </div>
     <div>
       <form name="config">
-        <input id="host" name="host" type="text" value="ws://192.168.1.110:8765/" />
+        <input id="host" name="host" type="text" value="192.168.1.110" />
         <input type="button" value="Init" onclick="updateHost()" />
-        <select id="joystick" name="Joystick">
+        <select id="joystick" name="Joystick" oninput="selectJoystick()">
         </select>
+        <img height="20px" width="20px"src="reload.png" onclick="listGamepads()"/>
       </form>
     </div>
   </body>
