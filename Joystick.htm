@@ -132,26 +132,28 @@
         });
         driveBox.addEventListener('mousemove', e=> {
           if(isClicked){
-            key_x = (250 - e.clientX - rect.left)/250.0 ;
-            key_y = (250 - e.clientY - rect.top)/250.0;
+            key_x = (e.clientX - 250 - rect.left )/250.0 ;
+            key_y = (250 - e.clientY - rect.top  )/250.0;
             console.log(key_x+ "," +key_y);
           }
         });
-        driveBox.addEventListener('mouseup', e=> {
+        document.addEventListener('mouseup', e=> {
           isClicked = 0;
           key_x = 0;
           key_y = 0;
         });
       }
+
       function pageInit(){
         getIP();
         setTimeout(listGamepads,500);
         killCode = setInterval(drawScreen, 50);
+        mouseDriveInit();
       }
-      pageInit();
 
       document.onkeydown = keyDownListen;
       document.onkeyup = keyUpListen;
+      document.addEventListener("DOMContentLoaded", pageInit, false);
     </script>
   </head>
   <body>
@@ -168,7 +170,7 @@
             vertical-align: bottom; ">
           </div>
       </div>
-      <div id="driveBox" style="position:relative; left:50; top:0; height:500px;width:500px;background-color: #000000;" onload="mouseDriveInit()" >
+      <div id="driveBox" style="position:relative; left:50; top:0; height:500px;width:500px;background-color: #000000;" onload="alert(\"WTF\")" >
         <img id="vid_window" style="-webkit-user-select: none;" src="http://192.168.1.110:8081/" width="500px" height="500px">
         <div id="xy_axis" style="position:absolute; bottom:250; left:250; height:20; width:20; background-color:#00ff00">
         </div>
