@@ -126,9 +126,20 @@
         //Mouse driving code
         driveBox = document.getElementById("driveBox") ;
         rect = driveBox.getBoundingClientRect();
+        driveBox.addEventListener('touchstart', e=> {
+          isClicked = 1;
+          console.log("CLICK");
+        });
         driveBox.addEventListener('mousedown', e=> {
           isClicked = 1;
           console.log("CLICK");
+        });
+        driveBox.addEventListener('touchmove', e=> {
+          if(isClicked){
+            key_x = (e.clientX - 250 - rect.left )/250.0 ;
+            key_y = (250 - e.clientY - rect.top  )/250.0;
+            console.log(key_x+ "," +key_y);
+          }
         });
         driveBox.addEventListener('mousemove', e=> {
           if(isClicked){
@@ -136,6 +147,11 @@
             key_y = (250 - e.clientY - rect.top  )/250.0;
             console.log(key_x+ "," +key_y);
           }
+        });
+        document.addEventListener('touchend', e=> {
+          isClicked = 0;
+          key_x = 0;
+          key_y = 0;
         });
         document.addEventListener('mouseup', e=> {
           isClicked = 0;
@@ -156,7 +172,7 @@
       document.addEventListener("DOMContentLoaded", pageInit, false);
     </script>
   </head>
-  <body>
+  <body scroll="no" style="overflow:hidden; height: 100%; width: 100px;">
     <div style="position:relative;">
       <div style="position: absolute;height:300px;width:30px;background-color: #000000;vertical-align: bottom;">
           <div id="z_axis" style="
@@ -170,8 +186,8 @@
             vertical-align: bottom; ">
           </div>
       </div>
-      <div id="driveBox" style="position:relative; left:50; top:0; height:500px;width:500px;background-color: #000000;" onload="alert(\"WTF\")" >
-        <img id="vid_window" style="-webkit-user-select: none;" src="http://192.168.1.110:8081/" width="500px" height="500px">
+      <div id="driveBox" style="z-index=10;position:relative; left:50; top:0; height:500px;width:500px;background-color: #000000;" onload="alert(\"WTF\")" >
+        <img id="vid_window" style="-webkit-user-select: none; z-index:0" src="http://192.168.1.110:8081/" width="500px" height="500px">
         <div id="xy_axis" style="position:absolute; bottom:250; left:250; height:20; width:20; background-color:#00ff00">
         </div>
       </div>
