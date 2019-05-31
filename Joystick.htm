@@ -19,7 +19,7 @@
       function getIP(){
         re = /(\d+\.){3}\d+/;
         ip = re.exec(document.URL);
-        if(ip){ document.getElementById("host").value = ip; }
+        if(ip[0]){ document.getElementById("host").value = ip[0]; }
       }
 
       function updateHost(){
@@ -27,7 +27,7 @@
         host=document.getElementById("host").value;
         img_host = "http://"+ host +":8081/";
         ws_host = "ws://"+ host +":8765/";
-        document.getElementById("host").value = host;
+        //document.getElementById("host").value = host;
         document.getElementById("vid_window").src= img_host;
         ws = new WebSocket(ws_host);
       }

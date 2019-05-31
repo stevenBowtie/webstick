@@ -2,7 +2,8 @@ import asyncio
 import websockets
 import serial
 
-limit=800
+limit=2000
+steering_damping = 4
 
 try:
   s = serial.Serial('/dev/ttyACM0',115200)
@@ -18,8 +19,8 @@ def go(d,t):
     s.write(goStr.encode("UTF-8"))
 
 def scale(x, y):
-  l=int((y*limit)+(-x*(limit/2)))
-  r=int((y*limit)+(x*(limit/2)))
+  l=int((y*limit)+(-x*(limit/steering_damping)))
+  r=int((y*limit)+(x*(limit/steering_damping)))
   go(l,r)
 
 def parse(dataRecvd):
