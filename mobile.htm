@@ -137,8 +137,9 @@
         driveBox.addEventListener('touchmove', e=> {
           //e.preventDefault();
           if(isClicked){
-            x = (e.clientX - 250 - rect.left )/250.0 ;
-            y = -( e.clientY - rect.top - 250 )/250.0;
+            
+            x = (e.touches[0].clientX - 250 - rect.left )/250.0 ;
+            y = -( e.touches[0].clientY - rect.top - 250 )/250.0;
             if ( -1 < x && x < 1 ){ key_x = x; }
             if ( -1 < y && y < 1 ){ key_y = y; }
             //key_y = (250 - e.clientY - rect.top  )/250.0;
@@ -165,7 +166,7 @@
       }
 
       function pageInit(){
-        getIP();
+        //getIP();
         setTimeout(listGamepads,500);
         killCode = setInterval(drawScreen, 50);
         mouseDriveInit();
