@@ -25,9 +25,12 @@ def scale(x, y):
 
 def parse(dataRecvd):
   dataRecvd=dataRecvd.split(',')
-  x = float( dataRecvd[0] )
-  y = float( dataRecvd[1] )
-  scale(x, y)
+  if dataRecvd[0].__contains__('drive'):
+    x = float( dataRecvd[1] )
+    y = float( dataRecvd[2] )
+    scale(x, y)
+  if dataRecvd[0].__contains__('limit'):
+    limit=dataRecvd[1]
 
 async def incoming_handler(websocket, path):
   while websocket.open:

@@ -19,7 +19,10 @@
       function getIP(){
         re = /(\d+\.){3}\d+/;
         ip = re.exec(document.URL);
-        if(ip[0]){ document.getElementById("host").value = ip[0]; }
+        try{
+          if(ip[0]){ document.getElementById("host").value = ip[0]; }
+        }
+        catch(err){ console.log("Failed to find IP"); }
       }
 
       function updateHost(){
