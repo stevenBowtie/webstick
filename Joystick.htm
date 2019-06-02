@@ -1,4 +1,4 @@
-<!DOCTYPE html5>
+ b.<!DOCTYPE html5>
 <html>
   <head>
     <script type="text/javascript">
@@ -98,11 +98,15 @@
         console.log(handleEvent);
       }
 
+      function setLimit(speed){
+        try{ if(ws.readyState==1){ ws.send("limit,"+speed); } }
+        catch(err) { }
+      }
+
       function drawScreen(){
           var cursor_color="#00ff00";
           var [x,y,z,trigger] = updateStick();
-//          if(ws.readystate!=1){ ws = new WebSocket(host); }
-          try{ if(ws.readyState==1){ ws.send(x+","+y+","+z+","+trigger); } }
+          try{ if(ws.readyState==1){ ws.send("drive,"+x+","+y+","+z+","+trigger); } }
           catch(err) { }
           document.getElementById("xy_axis").style.left=x*250+250;
           document.getElementById("xy_axis").style.bottom=y*250+250;

@@ -19,18 +19,21 @@ def go(d,t):
     s.write(goStr.encode("UTF-8"))
 
 def scale(x, y):
+  global limit
   l=int((y*limit)+(-x*(limit/steering_damping)))
   r=int((y*limit)+(x*(limit/steering_damping)))
   go(l,r)
 
 def parse(dataRecvd):
+  global limit
   dataRecvd=dataRecvd.split(',')
   if dataRecvd[0].__contains__('drive'):
     x = float( dataRecvd[1] )
     y = float( dataRecvd[2] )
     scale(x, y)
   if dataRecvd[0].__contains__('limit'):
-    limit=dataRecvd[1]
+    limit=int(dataRecvd[1])
+    print(limit)
 
 async def incoming_handler(websocket, path):
   while websocket.open:
