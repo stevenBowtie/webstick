@@ -14,6 +14,7 @@
           key_y = 0;
           key_trigger = 0,
           isClicked=0;
+          prev_trigger=0,
           selectedJoystick=0;
 
       function getIP(){
@@ -87,7 +88,9 @@
         catch(err){  }
         if(  key_x != 0 ){ x = key_x; }
         if(  key_y != 0 ){ y = key_y; }
-        if(  key_trigger != 0 ){ trigger = key_trigger; }
+        if(  key_trigger != 0 ){ 
+            trigger = 1; 
+          }
         return [x,y,z,trigger];
       }
 
@@ -101,8 +104,11 @@
       }
 
       function setOutput(button){
-        try{ if(ws.readyState==1){ ws.send("button,"+button); } }
-        catch(err) { }
+        if(!prevTrigger){
+          prevTrigger = 1;
+          try{ if(ws.readyState==1){ ws.send("button,"+button); } }
+          catch(err) { }
+        }
       }
 
       function drawScreen(){
@@ -117,6 +123,7 @@
             cursor_color="#FF0000";
             setOutput(0);
            }
+          else{ prevTrigger=0; }
           document.getElementById("xy_axis").style.backgroundColor=cursor_color;
       }
 
@@ -214,7 +221,8 @@
     <div class="button" onclick="setLimit(100)">Slow</div>
     <div class="button" style="top:60;" onclick="setLimit(1000)">Manuever</div>
     <div class="button" style="top:120;" onclick="setLimit(2000)">Destroy</div>
-    <div class="button" style="top:180;" onclick="setOutput(0)">Destroy</div>
+    <div class="button" style="top:180;" onclick="setOutput(0)">Output 1</div>
+    <div class="button" style="top:240;" onclick="setOutput(1)">Output 2</div>
     </div>
     <div style="position:absolute; top:550px;>
       <form name="config">
