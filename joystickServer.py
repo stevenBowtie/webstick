@@ -1,9 +1,19 @@
 import asyncio
 import websockets
 import serial
+import RPi.GPIO as gp
+
+# Setup GPIO pins
+gp.setmode(gp.BOARD)
+gp.setup(16, gp.OUT)
+gp.setup(18, gp.OUT)
+gp.output(16,0)
+gp.output(18,0)
 
 limit=2000
 steering_damping = 4
+rly1_state=0
+rly2_state=1
 
 try:
   s = serial.Serial('/dev/ttyS0',9600)
@@ -19,6 +29,15 @@ def constrain(x):
     return int(-1.0)
   else:
     return x
+
+def relay(pin):
+  global rly1_state, rly2_state
+  if pin == 0:
+    rly1_state = not rly1_state
+    gp.output(16, rly1_state)
+  elif pin == 1:
+    rly2_state = not rly2_state
+    gp.output(18, rly2_state)
 
 def go(d,t):
   d=int(d)
@@ -56,6 +75,9 @@ def parse(dataRecvd):
   if dataRecvd[0].__contains__('limit'):
     limit=int(dataRecvd[1])
     print(limit)
+  if dataRecvd[0].__contains__('button'):
+    button=int(dataRecvd[1])
+    relay(button)
 
 async def incoming_handler(websocket, path):
   while websocket.open:
