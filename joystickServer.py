@@ -7,8 +7,8 @@ import RPi.GPIO as gp
 gp.setmode(gp.BOARD)
 gp.setup(16, gp.OUT)
 gp.setup(18, gp.OUT)
-gp.output(16,0)
-gp.output(18,0)
+gp.output(16,1)
+gp.output(18,1)
 
 limit=2000
 steering_damping = 4
@@ -61,7 +61,7 @@ def scale(x, y):
   global limit
   x=constrain(x)
   y=constrain(y)
-  l=y*254
+  l=y*254*-1
   r=x*254
   go(l,r)
 
