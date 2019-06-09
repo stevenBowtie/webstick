@@ -2,12 +2,12 @@
 <html>
   <head>
     <script type="text/javascript">
-      var host = "ws://127.0.0.1:8765/",
+      var host = "ws://192.168.1.10:8765/",
           ws_host="",
-          img_host="http://192.168.1.110:8081/",
+          img_host="http://192.168.8.10:8081/",
           ws,
-          invert_x =  1,
-          invert_y = -1,
+          invert_x = -1,
+          invert_y = 1,
           invert_z = -1,
           killCode = 0,
           key_x = 0,
@@ -209,7 +209,7 @@
     </div>
     <div style="position:absolute; top:550px;>
       <form name="config">
-        <input id="host" name="host" type="text" value="192.168.1.110" />
+        <input id="host" name="host" type="text" value="192.168.8.10" />
         <input type="button" value="Init" onclick="updateHost()" />
         <select id="joystick" name="Joystick" oninput="selectJoystick()">
         </select>
