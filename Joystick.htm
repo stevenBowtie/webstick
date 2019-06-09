@@ -13,8 +13,10 @@
           key_x = 0,
           key_y = 0;
           key_trigger = 0,
+          key_button2 = 0,
           isClicked=0;
-          prev_trigger=0,
+          prevTrigger=0,
+          prevButton2 = 0,
           selectedJoystick=0;
 
       function getIP(){
@@ -77,21 +79,21 @@
       }
 
       function updateStick(){
-        var x=0, y=0, z=0, trigger = 0;
+        var x=0, y=0, z=0, trigger = 0, button2 = 0;
         try{
           var gamepads = navigator.getGamepads();
           x = gamepads[selectedJoystick]["axes"][0]*invert_x;
           y = gamepads[selectedJoystick]["axes"][1]*invert_y;
           z = gamepads[selectedJoystick]["axes"][2]*invert_z;
           trigger = gamepads[selectedJoystick]["buttons"][0]["pressed"];
+          button2 = gamepads[selectedJoystick]["buttons"][1]["pressed"];
         }
         catch(err){  }
         if(  key_x != 0 ){ x = key_x; }
         if(  key_y != 0 ){ y = key_y; }
-        if(  key_trigger != 0 ){ 
-            trigger = 1; 
-          }
-        return [x,y,z,trigger];
+        if(  key_trigger != 0 ){ trigger = 1; }
+        if(  key_button2 != 0 ){ button2 = 1; }
+        return [x,y,z,trigger,button2];
       }
 
       function mouseHandler(handleEvent){
@@ -104,16 +106,25 @@
       }
 
       function setOutput(button){
-        if(!prevTrigger){
-          prevTrigger = 1;
-          try{ if(ws.readyState==1){ ws.send("button,"+button); } }
-          catch(err) { }
+        if(button == 0){
+          if(!prevTrigger){
+            prevTrigger = 1;
+            try{ if(ws.readyState==1){ ws.send("button,"+button); } }
+            catch(err) { }
+          }
+        }
+        else{
+          if(!prevButton2){
+            prevButton2 = 1;
+            try{ if(ws.readyState==1){ ws.send("button,"+button); } }
+            catch(err) { }
+          }
         }
       }
 
       function drawScreen(){
           var cursor_color="#00ff00";
-          var [x,y,z,trigger] = updateStick();
+          var [x,y,z,trigger,button2 ] = updateStick();
           try{ if(ws.readyState==1){ ws.send("drive,"+x+","+y+","+z+","+trigger); } }
           catch(err) { }
           document.getElementById("xy_axis").style.left=x*250+250;
@@ -124,6 +135,11 @@
             setOutput(0);
            }
           else{ prevTrigger=0; }
+          if(button2){ 
+            cursor_color="#FF0000";
+            setOutput(1);
+           }
+          else{ prevButton2=0; }
           document.getElementById("xy_axis").style.backgroundColor=cursor_color;
       }
 
