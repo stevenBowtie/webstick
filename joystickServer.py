@@ -2,6 +2,7 @@ import asyncio
 import websockets
 import serial
 import RPi.GPIO as gp
+import struct
 
 # Setup GPIO pins
 gp.setmode(gp.BOARD)
@@ -41,28 +42,30 @@ def relay(pin):
 
 def go(d,t):
   d=int(d)
+  print(d)
   t=int(t)
   address=128
   if d >= 0:
-    motor1=chr(address)+chr(0)+chr(d)+chr((address+0+d)&127)
+    motor1=bytes([address,0,d,(address+0+d)&127])
   else:
     d=abs(d)
-    motor1=chr(address)+chr(1)+chr(d)+chr((address+1+d)&127)
+    motor1=bytes([address,1,d,(address+1+d)&127])
   if t >= 0:
-    motor2=chr(address)+chr(4)+chr(t)+chr((address+4+t)&127)
+    motor2=bytes([address,4,t,(address+4+t)&127])
   else:
     t=abs(t)
-    motor2=chr(address)+chr(5)+chr(t)+chr((address+5+t)&127)
+    motor2=bytes([address,5,t,(address+5+t)&127])
   if(s!=0):
-    s.write(motor1.encode("UTF-8"))
-    s.write(motor2.encode("UTF-8"))
+    print(motor1)
+    s.write(motor1)
+    s.write(motor2)
 
 def scale(x, y):
   global limit
   x=constrain(x)
   y=constrain(y)
-  l=(y**3)*254*-1
-  r=x*254
+  l=(y**3)*127*-1
+  r=x*127
   go(l,r)
 
 def parse(dataRecvd):
