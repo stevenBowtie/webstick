@@ -61,7 +61,7 @@ def scale(x, y):
   global limit
   x=constrain(x)
   y=constrain(y)
-  l=y*254*-1
+  l=(y**3)*254*-1
   r=x*254
   go(l,r)
 
