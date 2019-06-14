@@ -85,6 +85,12 @@
           x = gamepads[selectedJoystick]["axes"][0]*invert_x;
           y = gamepads[selectedJoystick]["axes"][1]*invert_y;
           z = gamepads[selectedJoystick]["axes"][2]*invert_z;
+          if( gamepads[selectedJoystick]["id"].indexOf("Serial+") != -1 ){
+            x = gamepads[selectedJoystick]["axes"][5]*invert_x;
+          }
+          if( gamepads[selectedJoystick]["id"].indexOf("Serial+") != -1){
+            y = gamepads[selectedJoystick]["axes"][2];
+          }
           trigger = gamepads[selectedJoystick]["buttons"][0]["pressed"];
           button2 = gamepads[selectedJoystick]["buttons"][1]["pressed"];
         }
