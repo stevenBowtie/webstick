@@ -34,7 +34,7 @@
       }
 
       function selectJoystick(){
-        selectedJoystick = document.forms[0].elements["Joystick"].selectedIndex;
+        selectedJoystick = document.getElementById("joystick").selectedIndex;
         console.log(selectedJoystick);
       }
 
@@ -130,12 +130,12 @@
           document.getElementById("xy_axis").style.left=x*250+250;
           document.getElementById("xy_axis").style.bottom=y*250+250;
           document.getElementById("z_axis").style.height=z*150+150;
-          if(trigger){ 
+          if(trigger){
             cursor_color="#FF0000";
             setOutput(0);
            }
           else{ prevTrigger=0; }
-          if(button2){ 
+          if(button2){
             cursor_color="#FF0000";
             setOutput(1);
            }
@@ -145,11 +145,11 @@
 
       function listGamepads(){
         var gamepads=navigator.getGamepads();
-        for(i=0;i<gamepads.length;i++){
-          if(gamepads[i]!=null){
-            document.forms[0].elements["Joystick"].innerHTML='';
+        if(gamepads[0]!=null){
+          document.getElementById("joystick").innerHTML='';
+          for(i=0;i<gamepads.length;i++){
             console.log( gamepads[i]);
-            document.forms[0].elements["Joystick"].add(new Option(gamepads[i]["id"],i));
+            document.getElementById("joystick").add(new Option(gamepads[i]["id"],i));
           }
         }
       }
