@@ -1,4 +1,5 @@
 import asyncio
+import time
 import websockets
 import serial
 
@@ -24,9 +25,10 @@ def scale(x, y):
   r=int((y*limit)+(x*(limit/steering_damping)))
   go(l,r)
 
-def parse(dataRecvd):
+def parse( ws_string, ws_handle ):
   global limit
-  dataRecvd=dataRecvd.split(',')
+  v_str=''
+  dataRecvd=ws_string.split(',')
   if dataRecvd[0].__contains__('drive'):
     x = float( dataRecvd[1] )
     y = float( dataRecvd[2] )
@@ -34,12 +36,24 @@ def parse(dataRecvd):
   if dataRecvd[0].__contains__('limit'):
     limit=int(dataRecvd[1])
     print(limit)
+  if dataRecvd[0].__contains__('battery'):
+    s.write( "M1:getb\r\n".encode() )
+    loop_limit=0
+    while s.inWaiting() < 9:
+      loop_limit+=1
+      if loop_limit > 1000000:
+        break
+    v_str = str( s.read( s.inWaiting() ).decode() )
+    v_str = v_str.split("M1:B")
+    v_str = v_str[1].split("\r\n")
+    v_str = str( int(v_str[0])/10.0 )
+  return v_str
 
 async def incoming_handler(websocket, path):
   while websocket.open:
     name = await websocket.recv()
-    print(name)
-    parse(name)
+    derp = parse( name, websocket )
+    await websocket.send( derp )
     websocket.pong()
   websocket.close()
 
