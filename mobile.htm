@@ -31,8 +31,37 @@
         ws_host = "ws://"+ host +":8765/";
         console.log("WS Host: "+ws_host);
         //document.getElementById("host").value = host;
-        document.getElementById("vid_window").src= img_host;
+        //document.getElementById("vid_window").src= img_host;
         ws = new WebSocket(ws_host);
+        ws.onmessage = function(event) {
+          if( event.data != '' ){
+            console.log( event.data ); 
+            updateBattery( event.data );  
+          } 
+        };
+      pollBattInterval = setInterval(pollBattery, 1000);
+      }
+
+      function setLimit(speed){
+        try{ if(ws.readyState==1){ ws.send("limit,"+speed); } }
+        catch(err) { console.log("Error setting speed limit"); }
+      }
+
+      function setOutput(button){
+        if(button == 0){
+          if(!prevTrigger){
+            prevTrigger = 1;
+            try{ if(ws.readyState==1){ ws.send("button,"+button); } }
+            catch(err) { }
+          }
+        }
+        else{
+          if(!prevButton2){
+            prevButton2 = 1;
+            try{ if(ws.readyState==1){ ws.send("button,"+button); } }
+            catch(err) { }
+          }
+        }
       }
 
       function selectJoystick(){
@@ -174,15 +203,42 @@
         mouseDriveInit();
       }
 
+      function updateBattery( vbatt ){
+        document.getElementById("voltage").innerHTML = vbatt;
+      }
+
+      function pollBattery(){
+        if( ws.readyState == 1 ){
+          ws.send("battery");
+        }
+      }
+
       document.onkeydown = keyDownListen;
       document.onkeyup = keyUpListen;
       document.addEventListener("DOMContentLoaded", pageInit, false);
     </script>
+    <style type="text/css">
+      div.button{ border-radius:5px;
+                  border: 2px solid #000000;
+                  position: absolute;
+                  height:50px;
+                  width:80px;
+                  left:560px;
+                  padding:auto;
+                  text-align:center;
+        }
+    </style>
   </head>
   <body scroll="no" style="overflow:hidden; height: 100%; width: 100px;">
     <div style="position:relative;">
-        <img id="vid_window" style="-webkit-user-select: none; z-index:0" src="http://192.168.1.110/" width="500px" height="500px">
-      </div>
+
+      <div class="button" onclick="setLimit(100)">Slow</div>
+      <div class="button" style="top:60;" onclick="setLimit(2000)">Manuever</div>
+      <div class="button" style="top:120;" onclick="setLimit(4000)">Destroy</div>
+      <div class="button" style="top:180;" onclick="setOutput(0)">Output 1</div>
+      <div class="button" style="top:240;" onclick="setOutput(1)">Output 2</div>
+      <div class="button" id="voltage" style="top:300;"></div>
+
     </div>
     <div style="width:100%;">
       <form name="config">
